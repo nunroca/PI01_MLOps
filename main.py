@@ -42,7 +42,7 @@ async def get_max_duration(year:int, platform:str,duration_type:str):
 
 
 
-@app.get('/get_score_count/{platform}/{score}/{year}',tags=["1. Desarrollo de API"])
+@app.get('/get_score_count/{platforma}/{scored}/{anio}',tags=["1. Desarrollo de API"])
 async def get_score_count(platform:str, score:float, year:int):
     
     """
@@ -69,7 +69,7 @@ async def get_score_count(platform:str, score:float, year:int):
 
 
 
-@app.get('/get_count_platform/{platform}',tags=["1. Desarrollo de API"])
+@app.get('/get_count_platform/{platforma}',tags=["1. Desarrollo de API"])
 async def get_count_platform(platform:str):
     """
        FUNCION #3 Cantidad de Peliculas por Plataforma\n
@@ -90,7 +90,7 @@ async def get_count_platform(platform:str):
 
 
 
-@app.get('/get_actor/{plataforma}/{year}',tags=["1. Desarrollo de API"])
+@app.get('/get_actor/{plataforma}/{anio}',tags=["1. Desarrollo de API"])
 async def get_actor(platform:str, year:int):
     """
         FUNCION #4: Actor que mas se repite por plataforma y año \n
