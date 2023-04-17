@@ -191,7 +191,7 @@ def get_recomendation(title: str):
     data2=df_titles
     
     # Vectorizamos la columna de titulos
-    vector=TfidfVectorizer(sublinear_tf=True, stop_words='english')
+    vector=TfidfVectorizer(sublinear_tf=True, min_df=10, max_df=0.5, ngram_range=(1,2),stop_words='english')
     tf_matrix=vector.fit_transform(data1["title_list"])
     
     # Establecemos una matriz de similitudes por cosenos
