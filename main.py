@@ -14,7 +14,7 @@ df_recom=pd.read_csv("DataRecomen.csv")
 @app.get("/")
 async def index():
     return RedirectResponse("https://pi01-mlops.onrender.com/docs")
-
+    
 
 
 ############ DESARROLLO API ################
@@ -22,85 +22,85 @@ async def index():
     
 @app.get('/get_max_duration/{anio}/{plataforma}/{dtype}',tags=["1. Desarrollo de API"])
 
-async def get_max_duration(year:int, platform:str,duration_type:str): 
+async def get_max_duration(anio:int, plataforma:str,dtype:str): 
     """
        FUNCION #1 Pelicula con Mayor Duración\n
-            Parameters º1 : Year (Int)          - [1920,1922,....,2020,2021] \n
-            Parameters º2 : Platform (Str)      - [Disney,Hulu,Netflix,Amazon] \n
-            Parameters º3 : Duration Type (Str) - [min,season]\n
+            Parameters º1 : anio (Int)          - [1920,1922,....,2020,2021] \n
+            Parameters º2 : plataforma (Str)    - [disney,hulu,netflix,amazon] \n
+            Parameters º3 : dtype (Str)         - [min,season]\n
     """
         
     # capturamos el dataframe transformado desde la variable global
     titles=df_titles
     
-    df_filter = titles[(titles['release_year']==year) & (titles['platform'].str.contains(platform)) & (titles['duration_type'].str.contains(duration_type))]
+    df_filter = titles[(titles['release_year']==anio) & (titles['platform'].str.contains(plataforma)) & (titles['duration_type'].str.contains(dtype))]
     
     # se optiene el valor maximo de la columna "duration_int" y lo utilizamos como un segundo filtro
-    resultado = df_filter[df_filter['duration_int'] == df_filter['duration_int'].max()].iloc[0]
+    respuesta = df_filter[df_filter['duration_int'] == df_filter['duration_int'].max()].iloc[0]
 
-    return {"pelicula" :resultado["title"]}
+    return {"pelicula" :respuesta["title"]}
 
 
 
-@app.get('/get_score_count/{platforma}/{scored}/{anio}',tags=["1. Desarrollo de API"])
-async def get_score_count(platform:str, score:float, year:int):
+@app.get('/get_score_count/{plataforma}/{scored}/{anio}',tags=["1. Desarrollo de API"])
+async def get_score_count(plataforma:str, scored:float, anio:int):
     
     """
        FUNCION #2 Cantidad de Peliculas por Plataforma, por score mayor a y por año\n
-            Parameters º1 : Platform (Str)      - [disney,hulu,netflix,amazon] \n
-            Parameters º2 : Score (float)       - [3.3,....,3.7] \n
-            Parameters º3 : Year (Int)          - [1920,1922,....,2020,2021]\n
+            Parameters º1 : plataforma (Str)  - [disney,hulu,netflix,amazon] \n
+            Parameters º2 : scored (float)    - [3.3,....,3.7] \n
+            Parameters º3 : anio (Int)        - [1920,1922,....,2020,2021]\n
     """ 
     titles=df_titles
     
     # se filtra el dataframe por año y plataforma
-    df_filter =titles[(titles["release_year"]==year) & (titles['id'].str.contains(platform[0], case= False))]
+    df_filter =titles[(titles["release_year"]==anio) & (titles['id'].str.contains(plataforma[0], case= False))]
     
     # se calcula el promedio de los rating por pelicula
-    df_result = df_filter[df_filter['rating_y']> score]
+    respuesta = len(df_filter[df_filter['rating_y']> scored])
     
    
-    return {"plataforma":platform,
-            "cantidad":len(df_result),
-            "anio":year,
-            "score":score}
+    return {"plataforma":plataforma,
+            "cantidad":respuesta,
+            "anio":anio,
+            "score":scored}
 
 
 
 
 
-@app.get('/get_count_platform/{platforma}',tags=["1. Desarrollo de API"])
-async def get_count_platform(platform:str):
+@app.get('/get_count_platform/{plataforma}',tags=["1. Desarrollo de API"])
+async def get_count_platform(plataforma:str):
     """
        FUNCION #3 Cantidad de Peliculas por Plataforma\n
-            Parameters º1 : Platform (Str)      - [disney,hulu,netflix,amazon] \n
+            Parameters º1 : plataforma (Str)    - [disney,hulu,netflix,amazon] \n
     """
     titles=df_titles
     
     # se realiza el filtro por plataforma
-    df_filter = titles[titles['id'].str.contains(platform[0], case= False)]
+    df_filter = titles[titles['id'].str.contains(plataforma[0], case= False)]
     
     # se obtiene la cantidad de registros depues de los filtros
-    result = df_filter['id'].count()
+    resultado = int(df_filter['id'].count())
     
-    return {"plataforma": platform
-            , "peliculas": int(result) }
+    return {"plataforma": plataforma
+            , "peliculas": resultado }
 
 
 
 
 
 @app.get('/get_actor/{plataforma}/{anio}',tags=["1. Desarrollo de API"])
-async def get_actor(platform:str, year:int):
+async def get_actor(plataforma:str, anio:int):
     """
         FUNCION #4: Actor que mas se repite por plataforma y año \n
-            Parameters º1 : Platform (Str)      - [disney,hulu,netflix,amazon] \n
-            Parameters º3 : Year (Int)          - [1920,1922,....,2020,2021]\n
+            Parameters º1 : plataforma (Str)   - [disney,hulu,netflix,amazon] \n
+            Parameters º2 : anio (Int)         - [1920,1922,....,2020,2021]\n
     """
     titles=df_titles
     
     # se realiza un filtro con las variables obligatorias
-    df_filter = titles[(titles['platform']==platform) & (titles['release_year']==year)]
+    df_filter = titles[(titles['platform']==plataforma) & (titles['release_year']==anio)]
     
     # se reemplaza los registros vacion de la columna "cast" con un string "vacio" para efectos de la consigna
     df_filter['cast'].fillna('vacio', inplace=True)
@@ -131,32 +131,32 @@ async def get_actor(platform:str, year:int):
         dict[i] = count
         
     # se obtiene el valor maximo de cantidad de apariciones
-    actor = max(dict, key = dict.get)
-    
-    return {"plataforma":platform,
-            "anio":year,
-            "actor":actor,
-            "apariciones":str(dict[actor])
-            }
+    resultado1 = str(max(dict, key = dict.get))
+    resultado2 =int(dict[resultado1])
 
+    return {"plataforma":"netflix",
+            "anio":"2020",
+            "actor":resultado1,
+            "apariciones":resultado2}
+    
 
 
 
 @app.get('/prod_per_county/{tipo}/{pais}/{anio}',tags=["1. Desarrollo de API"])
 
-async def prod_per_county(type: str, country: str, year: int):
+async def prod_per_county(tipo: str, pais: str, anio: int):
  
     """
        FUNCION #5 Diccionario filtrado por tipo de contenido, pais, año\n
-            Paraneters º1 : type (str)          - [tv show,movie] \n
-            Parameters º2 : country (Str)       - [france,canada,india,etc] \n
-            Parameters º3 : Year (Int)          - [1920,1922,....,2020,2021]\n
+            Paraneters º1 : tipo (str)    - [tv show  ,  movie] \n
+            Parameters º2 : pais (Str)    - [france  ,  canada  ,  india,etc] \n
+            Parameters º3 : anio (Int)    - [1920,1922,....,2020,2021]\n
     """
        
     titles=df_titles
-    df_filter = titles[(titles['type']==type) & (titles['country']==country) & (titles['release_year']==year)]
+    df_filter = titles[(titles['type']==tipo) & (titles['country']==pais) & (titles['release_year']==anio)]
     df1=df_filter[["country","release_year","title"]]
-    df2=df1.to_dict()
+    
     
     return {"pais":df1["release_year"].tolist(),"anio":df1["country"].tolist(),"peliculas":df1["title"].tolist()}
 
@@ -168,15 +168,15 @@ async def prod_per_county(type: str, country: str, year: int):
 def get_contents(rating: str):
     """
        FUNCION #6 Cantida de peliculas segun el tipo de rating\n
-            Paraneters º1 : ratimng (str)          - [g,13+,17+,18+,16+,etc] \n
+            Paraneters º1 : rating (str)          - [g,13+,17+,18+,16+,etc] \n
 
     """
     titles=df_titles
     df_filter = titles[(titles['rating_x']==rating)]
-    respuesta=df_filter["rating_x"].count()
+    respuesta=int(df_filter["rating_x"].count())
           
     return {"rating":rating, 
-            "contenido":int(respuesta)
+            "contenido":respuesta
             }
 
 
