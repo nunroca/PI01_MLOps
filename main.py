@@ -13,7 +13,7 @@ df_recom=pd.read_csv("DataRecomen.csv")
 #configuramos un pequeño index para que no quede vacio
 @app.get("/")
 async def index():
-    return RedirectResponse("http://127.0.0.1:8000/docs#/")
+    return RedirectResponse("https://pi01-mlops.onrender.com/docs")
 
 
 
