@@ -34,7 +34,7 @@ pickleshare
 Pillow
 platformdirs
 prompt-toolkit
-psutil=
+psutil
 pure-eval
 pydantic
 Pygments
