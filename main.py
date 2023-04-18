@@ -4,6 +4,7 @@ import numpy as np
 from fastapi.responses import RedirectResponse
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import pickle
 
 app= FastAPI() 
 
@@ -14,6 +15,7 @@ df_recom=pd.read_csv("DataRecomen.csv")
 @app.get("/")
 async def index():
     return RedirectResponse("https://pi01-mlops.onrender.com/docs")
+    #return RedirectResponse("http://127.0.0.1:8000/docs")
     
 
 
@@ -27,7 +29,7 @@ async def get_max_duration(anio:int, plataforma:str,dtype:str):
        FUNCION #1 Pelicula con Mayor Duración\n
             Parameters º1 : anio (Int)          - [1920,1922,....,2020,2021] \n
             Parameters º2 : plataforma (Str)    - [disney,hulu,netflix,amazon] \n
-            Parameters º3 : dtype (Str)         - [min,season]\n
+            Parameters º3 : dtype (Str)         - [min]\n
     """
         
     # capturamos el dataframe transformado desde la variable global
@@ -55,7 +57,8 @@ async def get_score_count(plataforma:str, scored:float, anio:int):
     
     # se filtra el dataframe por año y plataforma
     df_filter =titles[(titles["release_year"]==anio) & (titles['id'].str.contains(plataforma[0], case= False))]
-    
+    #se hace un filtro para que sean solo peliculas
+    df_filter=df_filter[df_filter['type']=="movie"]
     # se calcula el promedio de los rating por pelicula
     respuesta = len(df_filter[df_filter['rating_y']> scored])
     
@@ -78,7 +81,7 @@ async def get_count_platform(plataforma:str):
     titles=df_titles
     
     # se realiza el filtro por plataforma
-    df_filter = titles[titles['id'].str.contains(plataforma[0], case= False)]
+    df_filter = titles[titles['id'].str.contains(plataforma[0], case= False) & (titles['type']=="movie")]
     
     # se obtiene la cantidad de registros depues de los filtros
     resultado = int(df_filter['id'].count())
@@ -131,7 +134,7 @@ async def get_actor(plataforma:str, anio:int):
         dict[i] = count
         
     # se obtiene el valor maximo de cantidad de apariciones
-    resultado1 = str(max(dict, key = dict.get))
+    resultado1 = max(dict, key = dict.get)
     resultado2 =int(dict[resultado1])
 
     return {"plataforma":"netflix",
@@ -154,11 +157,15 @@ async def prod_per_county(tipo: str, pais: str, anio: int):
     """
        
     titles=df_titles
-    df_filter = titles[(titles['type']==tipo) & (titles['country']==pais) & (titles['release_year']==anio)]
-    df1=df_filter[["country","release_year","title"]]
+    # hacemos filtro por tipo y por anio  
+    df_filter = titles[(titles['type']==tipo) & (titles['release_year']==anio) & (titles["country"]==pais)]
     
     
-    return {"pais":df1["release_year"].tolist(),"anio":df1["country"].tolist(),"peliculas":df1["title"].tolist()}
+    
+    resultado=int(len(df_filter[["country","release_year","type"]]))
+    
+    
+    return {"pais":pais,"anio":anio,"contenido":resultado}
 
 
 
@@ -180,6 +187,9 @@ def get_contents(rating: str):
             }
 
 
+
+############# SISTEMA DE RECOMENDACION #####################
+
 @app.get('/get_recomendation/{title}', tags=["2. Sistema de Recomendación"])
 def get_recomendation(title: str):
     """
@@ -191,12 +201,12 @@ def get_recomendation(title: str):
     data2=df_titles
     
     # Vectorizamos la columna de titulos
-    vector=TfidfVectorizer(sublinear_tf=True, min_df=10, max_df=0.5, ngram_range=(1,2),stop_words='english')
+    vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
     tf_matrix=vector.fit_transform(data1["title_list"])
     
     # Establecemos una matriz de similitudes por cosenos
     cosine=cosine_similarity(tf_matrix)
-    
+
     #sacamos el indice del titulo a buscar y extraemos la linea de similitudes de la matriz
     index=data2.index[data2["title"]==title.lower()].tolist()[0]
     cosine=cosine[index]
