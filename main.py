@@ -14,8 +14,8 @@ df_recom=pd.read_csv("DataRecomen.csv")
 #configuramos un pequeño index para que no quede vacio
 @app.get("/")
 async def index():
-    return RedirectResponse("https://pi01-mlops.onrender.com/docs")
-    #return RedirectResponse("http://127.0.0.1:8000/docs")
+    #return RedirectResponse("https://pi01-mlops.onrender.com/docs")
+    return RedirectResponse("http://127.0.0.1:8000/docs")
     
 
 
@@ -193,13 +193,7 @@ def get_contents(rating: str):
 ############# SISTEMA DE RECOMENDACION #####################
 
 
-data1=df_recom
-# Vectorizamos la columna de titulos
-vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
-tf_matrix=vector.fit_transform(data1["title_list"])
-    
-# Establecemos una matriz de similitudes por cosenos
-cosine=cosine_similarity(tf_matrix)
+
 
 
 @app.get('/get_recomendation/{title}', tags=["2. Sistema de Recomendación"])
@@ -211,6 +205,14 @@ def get_recomendation(title: str):
     """
   
     data2=df_titles
+    
+    data1=df_recom.head(5000)
+    # Vectorizamos la columna de titulos
+    vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
+    tf_matrix=vector.fit_transform(data1["title_list"])
+    
+    # Establecemos una matriz de similitudes por cosenos
+    cosine=cosine_similarity(tf_matrix)
     #sacamos el indice del titulo a buscar y extraemos la linea de similitudes de la matriz
     index=data2.index[data2["title"]==title.lower()].tolist()[0]
     cosine=cosine[index]
@@ -220,7 +222,7 @@ def get_recomendation(title: str):
     top=mossimp[1:6]
     
     # creamos la lista de recomendados recorriendolo con un FOR
-    recome=list(data2.iloc[[i for i in top]]["title"].tolist())
+    recome=data2.iloc[[i for i in top]]["title"].tolist()
     
     return {'recomendacion':recome}
 
