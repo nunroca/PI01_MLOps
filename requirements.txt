@@ -27,7 +27,6 @@ matplotlib-inline
 nest-asyncio
 numpy
 packaging
-pand
 pandas
 parso
 pickleshare
