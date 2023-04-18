@@ -24,7 +24,7 @@ jupyter_core
 kiwisolver
 matplotlib
 matplotlib-inline
-nest-asyncio=
+nest-asyncio
 numpy
 packaging
 pand

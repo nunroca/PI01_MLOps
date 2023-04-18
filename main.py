@@ -188,7 +188,19 @@ def get_contents(rating: str):
 
 
 
+
+
 ############# SISTEMA DE RECOMENDACION #####################
+
+
+data1=df_recom
+# Vectorizamos la columna de titulos
+vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
+tf_matrix=vector.fit_transform(data1["title_list"])
+    
+# Establecemos una matriz de similitudes por cosenos
+cosine=cosine_similarity(tf_matrix)
+
 
 @app.get('/get_recomendation/{title}', tags=["2. Sistema de Recomendación"])
 def get_recomendation(title: str):
@@ -197,16 +209,8 @@ def get_recomendation(title: str):
             Se vectorizalos titulos, y se establece una similitud por cosenos\n
     
     """
-    data1=df_recom
+  
     data2=df_titles
-    
-    # Vectorizamos la columna de titulos
-    vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
-    tf_matrix=vector.fit_transform(data1["title_list"])
-    
-    # Establecemos una matriz de similitudes por cosenos
-    cosine=cosine_similarity(tf_matrix)
-
     #sacamos el indice del titulo a buscar y extraemos la linea de similitudes de la matriz
     index=data2.index[data2["title"]==title.lower()].tolist()[0]
     cosine=cosine[index]
