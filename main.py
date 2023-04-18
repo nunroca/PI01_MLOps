@@ -137,8 +137,8 @@ async def get_actor(plataforma:str, anio:int):
     resultado1 = max(dict, key = dict.get)
     resultado2 =int(dict[resultado1])
 
-    return {"plataforma":"netflix",
-            "anio":"2020",
+    return {"plataforma":plataforma,
+            "anio":anio,
             "actor":resultado1,
             "apariciones":resultado2}
     
@@ -206,7 +206,7 @@ def get_recomendation(title: str):
   
     data2=df_titles
     
-    data1=df_recom.head(5000)
+    data1=df_recom.head(10000)
     # Vectorizamos la columna de titulos
     vector=TfidfVectorizer(sublinear_tf=True, min_df=0.1,max_df=0.3,stop_words='english')
     tf_matrix=vector.fit_transform(data1["title_list"])
