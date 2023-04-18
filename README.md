@@ -12,7 +12,7 @@
 <hr>  
 
 ## Resumen del Proyecto
-Se cuenta con data de streaming.conteniendo informaciñon tanto peliculas y series, los directores artistas, año de salida, duracion, contenido, etc.
+Se cuenta con data de streaming conteniendo informacion tanto peliculas y series, los directores artistas, año de salida, duracion, contenido, etc.
 
 Haciendo uso de lo aprendido en el trancurso de todo el programa de herny , se desarollara lo requerido,teniendo como objetivo mostrar una data accesible por medio web.
 
