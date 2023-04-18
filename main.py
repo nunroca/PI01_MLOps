@@ -158,7 +158,7 @@ async def prod_per_county(tipo: str, pais: str, anio: int):
        
     titles=df_titles
     # hacemos filtro por tipo y por anio  
-    df_filter = titles[(titles['type']==tipo) & (titles['release_year']==anio) & (titles["country"]==pais)]
+    df_filter = titles[(titles['type']==tipo) & (titles.release_year==anio) & (titles.country.str.contains(pais)))]
     
     
     
@@ -216,7 +216,7 @@ def get_recomendation(title: str):
     top=mossimp[1:6]
     
     # creamos la lista de recomendados recorriendolo con un FOR
-    recome=data2.iloc[[i for i in top]]["title"].tolist()
+    recome=list(data2.iloc[[i for i in top]]["title"].tolist())
     
     return {'recomendacion':recome}
 
