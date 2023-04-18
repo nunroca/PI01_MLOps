@@ -158,7 +158,7 @@ async def prod_per_county(tipo: str, pais: str, anio: int):
        
     titles=df_titles
     # hacemos filtro por tipo y por anio  
-    df_filter = titles[(titles['type']==tipo) & (titles.release_year==anio) & (titles.country.str.contains(pais)))]
+    df_filter = titles[(titles['type']==tipo) & (titles.release_year==anio) & (titles.country.str.contains(pais))]
     
     
     
