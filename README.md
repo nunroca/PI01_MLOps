@@ -42,7 +42,7 @@ Se realizan los cambios a la data base, segun lo solicitado:
 
 ## Desarrollo de la API:
 
-Se desarolla una API, que hara uso de funciones para el llamado de la data anteriormente trabajada, suiguiendo una estructura en las respuestas.
+Se desarolla una API, que hara uso de funciones para el llamado de la data anteriormente trabajada, siguiendo una estructura en las respuestas.
 
 Funciones de la API:
 
