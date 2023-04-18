@@ -98,12 +98,12 @@ Para tener el acceso via web a la ejecuccion de la API, se carga los archivos en
 
 ## Video:
 
-
++ [LinkDrive] ( https://drive.google.com/file/d/1GAmaC8TKC8QgPfwIQMhbjwpzFBAi3TDs/view?usp=sharing )
 
 
 ## **Fuente de datos**
 
-+ [Dataset](https://drive.google.com/drive/folders/1b49OVFJpjPPA1noRBBi1hSmMThXmNzxn):
++ [Dataset](https://drive.google.com/drive/folders/1b49OVFJpjPPA1noRBBi1hSmMThXmNzxn)
 
 
 
